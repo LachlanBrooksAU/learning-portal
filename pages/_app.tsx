@@ -10,6 +10,8 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
 
+  const getLayout = Component.getLayout || ((page) => page);
+
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(nextColorScheme);
@@ -27,7 +29,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
-            <Component {...pageProps} />
+            {(() => getLayout(<Component {...pageProps} />))()}
           </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>
